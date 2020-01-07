@@ -15,7 +15,8 @@
 #include <Wire.h>
 #include <LIDARLite.h>
 int potPin = 0;
-int val = 0;
+int potVal = 0;
+int dist = 0;
 
 LIDARLite myLidarLite;
 
@@ -28,22 +29,17 @@ void setup()
 
 void loop()
 {
-  val = analogRead(potPin);
-  //Serial.println(val);
-  // Take a measurement with receiver bias correction and print to serial terminal
-  // Take 99 measurements without receiver bias correction and print to serial terminal
-
-  if (myLidarLite.distance() < val) {
-    for (int i = 0; i < 99; i++)
-    {
-      Serial.println(myLidarLite.distance(false));
-      Serial.print("M");
-    }
-    Serial.println(myLidarLite.distance());
-  }
-  if (myLidarLite.distance() > val) {
-
-    Serial.println(val);
-    Serial.print("V");
+  potVal = analogRead(potPin);
+  dist = myLidarLite.distance();
+  Serial.print("Pot ");
+  Serial.println(potVal);
+  Serial.print("Dist ");
+  Serial.print(dist);
+  if (dist < potVal * 9 / 10) {
+    Serial.println(" near");
+  } else if (dist > potVal * 11 / 10) {
+    Serial.println(" far");
+  } else {
+    Serial.println(" just right");
   }
 }
